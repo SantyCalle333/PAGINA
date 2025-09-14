@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - StrategIQ</title>
+    <meta name="description" content="Contáctanos para una consultoría gratuita. Estamos listos para transformar tu negocio con marketing digital.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i data-lucide="trending-up"></i>
+                    </div>
+                    <span class="logo-text">StrategIQ</span>
+                </div>
+
+                <nav class="nav" id="nav">
+                    <a href="index.html" class="nav-link">Inicio</a>
+                    <a href="servicios.html" class="nav-link">Servicios</a>
+                    <a href="casos-de-exito.html" class="nav-link">Casos de Éxito</a>
+                    <a href="nosotros.html" class="nav-link">Nosotros</a>
+                    <a href="contacto.html" class="nav-link active">Contacto</a>
+                </nav>
+
+                <a href="contacto.html" class="btn btn-primary">Consulta Gratis</a>
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="page-hero">
+            <div class="container">
+                <div class="page-hero-content">
+                    <h1 class="page-hero-title">Contacto</h1>
+                    <p class="page-hero-description">
+                        Estamos listos para transformar tu negocio. Contáctanos para una consultoría gratuita
+                    </p>
+                    <nav class="breadcrumb">
+                        <a href="index.html">Inicio</a>
+                        <span>/</span>
+                        <span>Contacto</span>
+                    </nav>
+                </div>
+            </div>
+        </section>
+
+        <!-- Información de Contacto -->
+        <section class="contact-info-section">
+            <div class="container">
+                <div class="contact-info-grid">
+                    <div class="contact-method">
+                        <div class="contact-icon blue">
+                            <i data-lucide="phone"></i>
+                        </div>
+                        <h3>Teléfono</h3>
+                        <p>+57 3246358407</p>
+                        <p>Lun - Vie: 8:00 AM - 6:00 PM</p>
+                    </div>
+
+                    <div class="contact-method">
+                        <div class="contact-icon green">
+                            <i data-lucide="mail"></i>
+                        </div>
+                        <h3>Email</h3>
+                        <p>strategiq@gmail.com</p>
+                        <p>Respuesta en menos de 24h</p>
+                    </div>
+
+                    <div class="contact-method">
+                        <div class="contact-icon purple">
+                            <i data-lucide="map-pin"></i>
+                        </div>
+                        <h3>Oficina</h3>
+                        <p>Carrera 76 # 93-07</p>
+                        <p>Medellín, Colombia</p>
+                    </div>
+
+                    <div class="contact-method">
+                        <div class="contact-icon orange">
+                            <i data-lucide="message-circle"></i>
+                        </div>
+                        <h3>WhatsApp</h3>
+                        <p>+57 3246358407</p>
+                        <p>Atención inmediata</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Formulario de Contacto -->
+        <section class="contact-form-section">
+            <div class="container">
+                <div class="contact-content">
+                    <div class="contact-form-container">
+                        <div class="form-header">
+                            <h2>Solicita tu Consultoría Gratuita</h2>
+                            <p>Completa el formulario y nos pondremos en contacto contigo en menos de 24 horas</p>
+                        </div>
+
+                        <form class="contact-form" id="contactForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">Nombre *</label>
+                                    <input type="text" id="firstName" name="firstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Apellido *</label>
+                                    <input type="text" id="lastName" name="lastName" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">Email Empresarial *</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Teléfono *</label>
+                                    <input type="tel" id="phone" name="phone" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="company">Empresa *</label>
+                                    <input type="text" id="company" name="company" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="industry">Industria</label>
+                                    <select id="industry" name="industry">
+                                        <option value="">Selecciona una industria</option>
+                                        <option value="tecnologia">Tecnología</option>
+                                        <option value="ecommerce">E-commerce</option>
+                                        <option value="salud">Salud</option>
+                                        <option value="educacion">Educación</option>
+                                        <option value="finanzas">Finanzas</option>
+                                        <option value="inmobiliaria">Inmobiliaria</option>
+                                        <option value="restaurantes">Restaurantes</option>
+                                        <option value="otros">Otros</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="services">Servicios de Interés</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="services" value="seo-sem">
+                                        <span class="checkmark"></span>
+                                        SEO & SEM
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="services" value="social-media">
+                                        <span class="checkmark"></span>
+                                        Social Media
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="services" value="email-marketing">
+                                        <span class="checkmark"></span>
+                                        Email Marketing
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="services" value="analytics">
+                                        <span class="checkmark"></span>
+                                        Analytics & Data
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="services" value="desarrollo-web">
+                                        <span class="checkmark"></span>
+                                        Desarrollo Web
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="services" value="branding">
+                                        <span class="checkmark"></span>
+                                        Branding Digital
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="budget">Presupuesto Mensual</label>
+                                <select id="budget" name="budget">
+                                    <option value="">Selecciona un rango</option>
+                                    <option value="500-1000">$500.000 - $1.000.000</option>
+                                    <option value="1000-2500">$1.000.000 - $2.500.000</option>
+                                    <option value="2500-5000">$2.500.000 - $5.000.000</option>
+                                    <option value="5000+">Más de $5.000.000</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="message">Cuéntanos sobre tu proyecto *</label>
+                                <textarea id="message" name="message" rows="5" placeholder="Describe tus objetivos, desafíos actuales y qué esperas lograr con el marketing digital..." required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="privacy" required>
+                                    <span class="checkmark"></span>
+                                    Acepto la <a href="#" class="link">Política de Privacidad</a> y el tratamiento de mis datos personales
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-large form-submit">
+                                Solicitar Consultoría Gratuita
+                                <i data-lucide="send"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="contact-benefits">
+                        <h3>¿Qué incluye tu consultoría gratuita?</h3>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i data-lucide="search"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h4>Auditoría Digital Gratuita</h4>
+                                <p>Análisis completo de tu presencia digital actual</p>
+                            </div>
+                        </div>
+
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i data-lucide="target"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h4>Estrategia Personalizada</h4>
+                                <p>Plan específico para tus objetivos y presupuesto</p>
+                            </div>
+                        </div>
+
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i data-lucide="bar-chart-3"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h4>Proyección de Resultados</h4>
+                                <p>Estimación realista de crecimiento y ROI</p>
+                            </div>
+                        </div>
+
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i data-lucide="users"></i>
+                            </div>
+                            <div class="benefit-content">
+                                <h4>Reunión con Expertos</h4>
+                                <p>45 minutos con nuestro equipo especializado</p>
+                            </div>
+                        </div>
+
+                        <div class="consultation-guarantee">
+                            <div class="guarantee-icon">
+                                <i data-lucide="shield-check"></i>
+                            </div>
+                            <div class="guarantee-content">
+                                <h4>100% Sin Compromiso</h4>
+                                <p>No hay obligación de contratar nuestros servicios</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="faq-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Preguntas Frecuentes</h2>
+                </div>
+
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h4>¿Cuánto tiempo toma ver resultados?</h4>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Los primeros resultados suelen verse entre 30-60 días, dependiendo del servicio. SEO puede tomar 3-6 meses, mientras que SEM y Social Media muestran resultados más rápidos.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h4>¿Trabajan con empresas de todos los tamaños?</h4>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Sí, trabajamos desde startups hasta grandes corporaciones. Adaptamos nuestras estrategias y presupuestos a las necesidades específicas de cada cliente.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h4>¿Ofrecen contratos flexibles?</h4>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Ofrecemos contratos mensuales sin permanencia mínima. Creemos en ganarnos tu confianza mes a mes con resultados excepcionales.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h4>¿Cómo miden el éxito de las campañas?</h4>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Utilizamos KPIs específicos según tus objetivos: ROI, conversiones, tráfico, engagement, etc. Proporcionamos reportes mensuales detallados con métricas claras.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h4>¿Qué incluye el servicio de consultoría?</h4>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Incluye auditoría digital completa, análisis de competencia, estrategia personalizada, proyección de resultados y recomendaciones específicas para tu industria.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <div class="logo-icon">
+                            <i data-lucide="trending-up"></i>
+                        </div>
+                        <span class="logo-text">StrategIQ</span>
+                    </div>
+                    <p class="footer-description">
+                        Tu socio estratégico para el crecimiento digital.
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Servicios</h3>
+                    <ul class="footer-links">
+                        <li><a href="servicios.html">SEO & SEM</a></li>
+                        <li><a href="servicios.html">Social Media</a></li>
+                        <li><a href="servicios.html">Email Marketing</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Empresa</h3>
+                    <ul class="footer-links">
+                        <li><a href="nosotros.html">Nosotros</a></li>
+                        <li><a href="casos-de-exito.html">Casos de Éxito</a></li>
+                        <li><a href="contacto.html">Contacto</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Contacto</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i data-lucide="phone"></i>
+                            <span>+57 3246358407</span>
+                        </div>
+                        <div class="contact-item">
+                            <i data-lucide="mail"></i>
+                            <span>strategiq@gmail.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 StrategIQ. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+/* Reseteo básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Lora', serif; /* Fuente elegante para texto */
+}
+
+/* Fondo y layout */
+body {
+  background: linear-gradient(135deg, #1e1e2f, #3e3e5e);
+  color: #f0f0f0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+/* Contenedor general */
+.container {
+  background-color: rgba(40, 40, 55, 0.85);
+  padding: 2rem 3rem;
+  border-radius: 15px;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.7);
+  max-width: 600px;
+  text-align: center;
+  animation: fadeInMove 1.5s ease forwards;
+}
+
+/* Imagen con borde sutil y animación de aparición */
+.container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 3px solid #8892b0;
+  box-shadow: 0 8px 20px rgba(136, 146, 176, 0.8);
+  transition: transform 0.5s ease;
+}
+
+/* Efecto hover suave para imagen */
+.container img:hover {
+  transform: scale(1.05) rotate(1deg);
+}
+
+/* Títulos y textos */
+h1, h2 {
+  color: #aab7d1;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+  animation: fadeInText 1.5s ease forwards;
+}
+
+p {
+  color: #d0d6e8;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-top: 1rem;
+  animation: fadeInText 2s ease forwards;
+}
+
+/* Animaciones */
+@keyframes fadeInMove {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInText {
+  from {
+    opacity: 0;
+    letter-spacing: 5px;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 1px;
+  }
+}
+
+/* Animación de fondo sutil */
+body::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(170, 183, 209, 0.12), transparent 70%);
+  animation: slowRotate 60s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes slowRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
