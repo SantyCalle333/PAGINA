@@ -1,50 +1,58 @@
-# Setup
+# Configuración e Instalación (Setup)
 
-If the user hasn't already installed the SDK, always run the user's node package manager of choice, and install the package in the directory ../package.json.
-For more information on where the library is located, look at the connector.yaml file.
+Si alguien clona este proyecto por primera vez y necesita instalar las herramientas y dependencias, simplemente debe ejecutar el gestor de paquetes de Node.js (`npm`) en la raíz del proyecto.
 
-```ts
-import { initializeApp } from 'firebase/app';
-
-initializeApp({
-  // fill in your project config here using the values from your Firebase project or from the `firebase_get_sdk_config` tool from the Firebase MCP server.
-});
+```bash
+npm install
 ```
 
-Then, you can run the SDK as needed.
-```ts
-import { ... } from '@dataconnect/generated';
+## Angular y Firebase (Realtime Database)
+
+La estructura de esta aplicación se generó utilizando Angular CLI con el formato moderno de componentes *Standalone*. Para integrar la base de datos, utilizamos el ecosistema oficial `@angular/fire`.
+
+Si estuvieras configurando este proyecto desde cero, el comando principal de andamiaje (scaffolding) sería:
+
+```bash
+ng add @angular/fire
 ```
 
+### Configuración en `app.config.ts`
 
-## Angular
-### Setup
+Al no tener módulos (`app.module.ts`), toda la configuración central de Firebase y la provisión de la Base de Datos en Tiempo Real (Realtime Database) ocurre dentro del archivo principal `app.config.ts`.
 
-The user should run the scaffolding command to generate the application
-structure and dependencies.
+La configuración de tu aplicación está estructurada de la siguiente manera:
 
-This command is `ng add @angular/fire`.
+```typescript
+import { ApplicationConfig } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { routes } from './app.routes';
 
-After running this command, the user should have a basic application structure
-with their config looking something like this:
-
-```ts
-import { getDataConnect } from 'firebase/data-connect';
-import { initializeApp } from 'firebase/app';
-import { connectorConfig} from '@dataconnect/generated';
-import { provideDataConnect } from '@angular/fire/data-connect';
-import { provideQueryClient, QueryClient } from '@tanstack/angular-query-experimental';
+// Importaciones fundamentales de Firebase
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getDatabase, provideDatabase } from '@angular/fire/database';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideFirebaseApp(() => initializeApp({ ... /* your config here. To generate this, you can use the `firebase_sdk_config` MCP tool */ })),
-    provideQueryClient(new QueryClient()),
-    provideDataConnect(() => getDataConnect(connectorConfig))
-    ...
-  ],
-  ...
-}
+    provideRouter(routes),
+    
+    // 1. Inicializamos la conexión principal al proyecto de Firebase
+    provideFirebaseApp(() => initializeApp({
+      projectId: "tu-proyecto-id",
+      appId: "tu-app-id",
+      storageBucket: "tu-proyecto-id.appspot.com",
+      apiKey: "TU_API_KEY_AQUI",
+      authDomain: "tu-proyecto-id.firebaseapp.com",
+      messagingSenderId: "123456789"
+    })),
+
+    // 2. Proveemos la conexión de la Base de Datos en Tiempo Real a toda la aplicación
+    provideDatabase(() => getDatabase())
+  ]
+};
 ```
-They should also have the `@tanstack-query-firebase/angular` package installed in their package.json.
 
+*(Nota: Las credenciales reales deben manejarse de forma segura usando variables de entorno o el objeto environment de Angular).*
 
+### Uso Inmediato
+
+Una vez que el archivo `app.config.ts` tiene esta estructura, los servicios internos (como `ZapatillasService`, `VideojuegosService`, y `CursosService`) pueden utilizar la inyección de dependencias `inject(Database)` de manera nativa y directa, sin configuraciones adicionales.

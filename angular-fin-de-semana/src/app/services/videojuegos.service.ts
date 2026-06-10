@@ -1,9 +1,13 @@
 import { Injectable, inject, Injector, runInInjectionContext } from '@angular/core';
 import { Database, ref, listVal, push, remove } from '@angular/fire/database';
-import { setLogLevel, LogLevel } from '@angular/fire';
 import { Videojuego } from '../models/videojuego';
 import { Observable } from 'rxjs';
 
+/**
+ * Yo soy el servicio de Videojuegos.
+ * Me encargo de encapsular toda la lógica de escritura y lectura de videojuegos hacia Firebase,
+ * manteniendo a los componentes limpios y enfocados solo en renderizar HTML.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -13,24 +17,35 @@ export class VideojuegosService {
   private videojuegos$: Observable<Videojuego[]>;
 
   constructor() {
-    setLogLevel(LogLevel.SILENT);
+    // Yo creo una referencia a la colección de 'videojuegos' en la base de datos
+    // y establezco un flujo de datos en vivo (Observable).
     const dbRef = ref(this.db, 'videojuegos');
     this.videojuegos$ = listVal<Videojuego>(dbRef, { keyField: 'id' });
   }
 
+  /**
+   * Yo devuelvo el túnel de datos para que el componente HTML se suscriba usando el "Async Pipe".
+   */
   obtenerVideojuegos(): Observable<Videojuego[]> {
     return this.videojuegos$;
   }
 
-  agregarVideojuego(juego: Videojuego) {
+  /**
+   * Yo recibo un objeto Videojuego, lo limpio quitándole el ID (que no puede ser undefined)
+   * y lo empujo a la nube.
+   */
+  agregarVideojuego(videojuego: Videojuego) {
     return runInInjectionContext(this.injector, () => {
       const dbRef = ref(this.db, 'videojuegos');
-      const data = JSON.parse(JSON.stringify(juego));
-      delete data.id; // Firebase no permite propiedades 'undefined'
-      return push(dbRef, data);
+      const v = JSON.parse(JSON.stringify(videojuego));
+      delete v.id; 
+      return push(dbRef, v);
     });
   }
 
+  /**
+   * Yo borro un videojuego específico de la base de datos usando su ID único.
+   */
   eliminarVideojuego(id: string) {
     return runInInjectionContext(this.injector, () => {
       const dbRef = ref(this.db, `videojuegos/${id}`);

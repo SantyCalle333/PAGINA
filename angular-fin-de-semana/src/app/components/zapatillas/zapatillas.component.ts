@@ -6,6 +6,10 @@ import { ZapatillasService } from '../../services/zapatillas.service';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
+/**
+ * Yo soy el componente ZapatillasComponent.
+ * Mi trabajo es manejar la lógica visual y de usuario para las zapatillas.
+ */
 @Component({
 	selector: 'app-zapatillas-core',
 	standalone: true,
@@ -15,16 +19,19 @@ import { take } from 'rxjs/operators';
 })
 export class ZapatillasComponent implements OnInit {
 	public titulo: string = 'Componente de Zapatillas';
-	public listado: string = 'Listado de Zapatillas';
 	
-	// [DOC] Reemplazamos el arreglo estático por un Observable ($) de RxJS.
-	// Esto nos permite leer datos de Firebase en tiempo real sin escribir callbacks confusos.
-	// Además, al pasarlo al HTML mediante el AsyncPipe, evitamos crear "Memory Leaks" o bucles infinitos.
+	// Yo contengo la suscripción a los datos en vivo de Firebase.
 	public zapatillas$: Observable<Zapatilla[]> = new Observable();
+	
+	// Yo almaceno las marcas únicas sin duplicados para mostrarlas en la vista.
 	public marcas: string[] = [];
+	
+	// Variables para el formulario y autocompletado.
 	public nuevoZapatilla: string = '';
 	public mostrarSugerencias: boolean = false;
 	public sugerencias: string[] = [];
+	
+	// Yo soy un catálogo local estático para autocompletar modelos genéricos.
 	public catalogoZapatillas: Zapatilla[] = [
 		new Zapatilla('Nike Air Max', 'Nike', 100, 'Negro', true),
 		new Zapatilla('Adidas Superstar', 'Adidas', 290, 'Blanco', true),
@@ -35,72 +42,70 @@ export class ZapatillasComponent implements OnInit {
 		new Zapatilla('Vans Old Skool', 'Vans', 50, 'Negro', true)
 	];
 
-	constructor(private zapatillasService: ZapatillasService) {
-		console.log('Componente Zapatillas creado');
-	}
+	constructor(private zapatillasService: ZapatillasService) {}
 
+	/**
+	 * Yo me ejecuto justo cuando el componente se carga.
+	 * Conecto el túnel de datos y me suscribo para recalcular mis marcas únicas reactivamente.
+	 */
 	ngOnInit() {
-        console.log('Componente inicializado');
         this.zapatillas$ = this.zapatillasService.obtenerZapatillas();
-		this.marcas = new Array();
 		
-		// Ejecutar automáticamente al cargar el componente
-		this.getMarcas();
+		// Yo uso 'Set' para garantizar que las marcas sean únicas de forma más limpia y moderna que un 'indexOf'.
+		this.zapatillas$.subscribe(zapatillas => {
+			const marcasUnicas = new Set(zapatillas.map(z => z.marca));
+			this.marcas = Array.from(marcasUnicas);
+        });
+
 		this.imprimirJson();
     }
 	
-	// Métodos requeridos por tu HTML
-	getMarcas() {
-        // [DOC] El operador take(1) es CRÍTICO cuando nos suscribimos manualmente dentro de un botón.
-        // Le indica a Angular: "Conéctate a Firebase, obtén los datos actuales, y CIERRA la suscripción de inmediato".
-        // Si no usamos take(1), cada click al botón crearía una nueva conexión fantasma en segundo plano.
-        this.zapatillas$.pipe(take(1)).subscribe(zapatillas => {
-            this.marcas = [];
-            zapatillas.forEach((zapatilla) => {
-                if (this.marcas.indexOf(zapatilla.marca) < 0) {
-                    this.marcas.push(zapatilla.marca);
-                }
-            });
-            console.log('Marcas únicas en Firebase:', this.marcas);
-        });
-	}
+	/**
+	 * Yo agrego una nueva zapatilla. 
+	 * Si su nombre coincide con el catálogo, heredo su marca y precio. Si no, creo una genérica.
+	 */
 	agregarZapatilla() {
-		if (this.nuevoZapatilla.trim()) {
-          const nombreBuscado = this.nuevoZapatilla.trim();
-          const encontrada = this.catalogoZapatillas.find(z => z.nombre.toLowerCase() === nombreBuscado.toLowerCase());
-          
-          let nuevaZapa: Zapatilla;
-          if (encontrada) {
-             nuevaZapa = new Zapatilla(encontrada.nombre, encontrada.marca, encontrada.precio, encontrada.color, encontrada.stock);
-          } else {
-             nuevaZapa = new Zapatilla(nombreBuscado, 'Sin marca', 0, 'Sin color', true);
-          }
+		if (!this.nuevoZapatilla.trim()) return;
 
-		  // Firebase Realtime (WebSockets)
-		  this.zapatillasService.agregarZapatilla(nuevaZapa);
-		  // Ya no llamamos a cargarZapatillas() porque Firebase nos avisa automáticamente
+		const nombreBuscado = this.nuevoZapatilla.trim();
+		const encontrada = this.catalogoZapatillas.find(z => z.nombre.toLowerCase() === nombreBuscado.toLowerCase());
+		
+		let nuevaZapa: Zapatilla;
+		if (encontrada) {
+			nuevaZapa = new Zapatilla(encontrada.nombre, encontrada.marca, encontrada.precio, encontrada.color, encontrada.stock);
+		} else {
+			nuevaZapa = new Zapatilla(nombreBuscado, 'Sin marca', 0, 'Sin color', true);
+		}
 
-	      this.nuevoZapatilla = '';
-	    }
+		this.zapatillasService.agregarZapatilla(nuevaZapa);
+		this.nuevoZapatilla = '';
 	}
 	
+	/**
+	 * Yo mando a borrar la zapatilla de la base de datos si esta tiene un ID válido.
+	 */
 	eliminarZapatilla(zapatillaAEliminar: Zapatilla) {
-		// Si la zapatilla tiene un ID asignado por Firebase, la eliminamos de la nube
 		if (zapatillaAEliminar.id) {
 			this.zapatillasService.eliminarZapatilla(zapatillaAEliminar.id);
 		}
 	}
 
+	/**
+	 * Yo tomo el estado actual de la base de datos (solo una vez gracias a 'take(1)') 
+	 * y lo imprimo en la consola como un JSON puro.
+	 */
 	imprimirJson() {
 		this.zapatillas$.pipe(take(1)).subscribe(zapatillas => {
 			console.log('JSON actual en Firebase:', JSON.stringify(zapatillas, null, 2));
 		});
 	}
 
+	/**
+	 * Yo reviso qué escribe el usuario para mostrarle sugerencias en pantalla que coincidan con mi catálogo.
+	 */
 	onInputChange() {
 		const texto = this.nuevoZapatilla.trim().toLowerCase();
 		if (texto.length > 0) {
-			// Extraemos solo los nombres del catálogo para las sugerencias
 			this.sugerencias = this.catalogoZapatillas
 				.map(z => z.nombre)
 				.filter(nombre => nombre.toLowerCase().includes(texto));
@@ -111,18 +116,21 @@ export class ZapatillasComponent implements OnInit {
 		}
 	}
 
-	onKeyDown(event: any) {
-		if (event.key === 'Tab') {
+	/**
+	 * Yo auto-completo el input con la primera sugerencia disponible cuando presionan 'Tab'.
+	 */
+	onKeyDown(event: KeyboardEvent) {
+		if (event.key === 'Tab' && this.sugerencias.length > 0) {
 			event.preventDefault();
-			// Autocompletado real: tomamos la primera sugerencia si existe
-			if (this.sugerencias.length > 0) {
-				this.nuevoZapatilla = this.sugerencias[0];
-				this.sugerencias = [];
-				this.mostrarSugerencias = false;
-			}
+			this.nuevoZapatilla = this.sugerencias[0];
+			this.sugerencias = [];
+			this.mostrarSugerencias = false;
 		}
 	}
 
+	/**
+	 * Yo me encargo de llenar el input cuando el usuario hace clic directamente en una sugerencia.
+	 */
 	seleccionarSugerencia(sugerencia: string) {
 		this.nuevoZapatilla = sugerencia;
 		this.sugerencias = [];

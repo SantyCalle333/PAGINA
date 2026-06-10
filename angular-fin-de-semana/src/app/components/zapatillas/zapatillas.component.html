@@ -1,37 +1,46 @@
 <hr />
 
-<div class="Zapatillas">
-  <!-- Title showing number of brands in the array -->
-  <h2 style="color: var(--accent);">Zapatillas ({{ marcas.length }} marcas)</h2>
+<!-- Yo soy el contenedor principal del componente Zapatillas -->
+<div class="zapatillas-container">
+  
+  <!-- Yo muestro dinámicamente la longitud del arreglo de marcas únicas -->
+  <h2 class="zapatillas-titulo">Zapatillas ({{ marcas.length }} marcas)</h2>
 
-  <!-- Iterate over basic array 'marcas' using the new @for control flow -->
-  <ul style="margin-bottom: 1.5rem; display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+  <!-- Yo utilizo la nueva sintaxis @for de Angular para iterar sobre las marcas -->
+  <ul class="marcas-lista">
     @for (marca of marcas; track $index) {
-      <li style="background: rgba(255,255,255,0.05); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">
+      <li class="marca-item">
         {{ marca }}
       </li>
     }
   </ul>
 
-  <!-- Iterate over the array of Objects 'zapatillas' from Firebase using AsyncPipe -->
+  <!-- 
+    Yo me suscribo al túnel asíncrono con el "Async Pipe" y guardo el resultado en la variable "zapatillas". 
+    Esto evita fugas de memoria automáticamente.
+  -->
   @if (zapatillas$ | async; as zapatillas) {
+    <!-- Yo muestro un mensaje amigable si la base de datos está vacía -->
     @if (zapatillas.length === 0) {
-      <p style="color: #999; font-style: italic;">No hay zapatillas agregadas aún</p>
+      <p class="zapatillas-vacias">No hay zapatillas agregadas aún</p>
     } @else {
-      <ul style="margin-bottom: 1.5rem; text-align: left; display: inline-block;">
-        <!-- In Angular 17+, we replace *ngFor with @for. We must provide a 'track' expression -->
+      <!-- Yo listo los objetos completos traídos desde Firebase -->
+      <ul class="catalogo-lista">
         @for (zapatilla of zapatillas; track $index) {
-          <li style="margin-bottom: 0.8rem; padding: 0.5rem; border: 1px solid var(--border); border-radius: 8px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+          <li class="catalogo-item">
+            <div class="catalogo-contenido">
               <span>
                 <strong>{{ zapatilla.nombre }}</strong> de {{ zapatilla.marca }}
-                <span style="color: var(--accent); margin-left: 0.5rem;">${{ zapatilla.precio }}</span>
-                <!-- Replacing *ngIf with @if -->
+                <span class="precio-texto">${{ zapatilla.precio }}</span>
+                
+                <!-- Yo condiciono la aparición de esta etiqueta a si el precio es menor a 100 -->
                 @if (zapatilla.precio < 100) {
-                  <span style="background: #10b981; color: white; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.75rem; margin-left: 0.5rem;">¡Oferta!</span>
+                  <span class="oferta-etiqueta">¡Oferta!</span>
                 }
               </span>
-              <button (click)="eliminarZapatilla(zapatilla)" style="background: #ef4444; padding: 0.2rem 0.5rem; font-size: 0.8rem;">Eliminar</button>
+              
+              <!-- Yo emito la orden de eliminar enviando el objeto completo al controlador -->
+              <button class="btn-eliminar" (click)="eliminarZapatilla(zapatilla)">Eliminar</button>
             </div>
           </li>
         }
@@ -39,51 +48,36 @@
     }
   }
 
-  <!-- Form controls with two-way data binding [(ngModel)] -->
-  <div style="display: flex; flex-direction: column; gap: 0.5rem; max-width: 400px; margin: 0 auto;">
-    <!-- 
-      Keydown event tracking
-      We bind the (input) event to onInputChange() and (keydown) to onKeyDown().
-      We also added a suggestion dropdown that mimics an autocomplete feature.
-    -->
-    <div style="position: relative; width: 100%;">
-      <p style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 0.2rem; text-align: left;">
+  <!-- 
+    Yo soy la zona del formulario.
+    Uso [(ngModel)] para sincronizar la variable "nuevoZapatilla" entre TypeScript y HTML (Enlace bidireccional).
+  -->
+  <div class="formulario-container">
+    <div class="input-grupo">
+      <p class="input-etiqueta">
         {{ nuevoZapatilla || 'Ingresar Modelo' }}
       </p>
+      
+      <!-- Yo detecto qué escribe el usuario y atrapo cuando presiona 'Tab' o 'Enter' para las sugerencias -->
       <input
         type="text"
         [(ngModel)]="nuevoZapatilla"
         (input)="onInputChange()"
         (keydown)="onKeyDown($event)"
         placeholder="Marca de zapatilla..."
-        style="width: 100%; box-sizing: border-box;"
+        class="input-zapatilla"
       />
 
-      <!-- Dropdown with suggestions shown when user types and suggestions exist -->
+      <!-- Yo muestro este menú flotante solo si TypeScript me dice que hay coincidencias -->
       @if (mostrarSugerencias) {
-        <ul style="
-          position: absolute; 
-          top: 100%; 
-          left: 0; 
-          width: 100%; 
-          background: var(--bg-secondary); 
-          border: 1px solid var(--border); 
-          list-style: none; 
-          padding: 0; 
-          margin: 0; 
-          border-radius: 4px; 
-          z-index: 10;
-          box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        ">
-          <!-- We iterate over matched suggestions -->
+        <ul class="sugerencias-lista">
           @for (sug of sugerencias; track $index) {
+            <!-- Yo reacciono al clic del mouse o a presionar Enter estando enfocada -->
             <li 
+              class="sugerencia-item"
               (click)="seleccionarSugerencia(sug)"
               (keydown.enter)="seleccionarSugerencia(sug)"
               tabindex="0"
-              style="padding: 0.5rem; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: left;"
-              onmouseover="this.style.background='var(--primary)'; this.style.color='white'"
-              onmouseout="this.style.background='transparent'; this.style.color='var(--text-primary)'"
             >
               {{ sug }}
             </li>
@@ -92,9 +86,9 @@
       }
     </div>
 
-    <!-- Event bindings calling methods defined in TS -->
-    <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 0.5rem;">
-      <button (click)="agregarZapatilla()">Agregar</button>
+    <!-- Yo activo la función para guardar en la base de datos cuando hacen clic en Agregar -->
+    <div class="botones-container">
+      <button class="btn-agregar" (click)="agregarZapatilla()">Agregar</button>
     </div>
   </div>
 </div>

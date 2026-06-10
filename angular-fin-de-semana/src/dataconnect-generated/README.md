@@ -1,511 +1,157 @@
-# Generated TypeScript README
-This README will guide you through the process of using the generated JavaScript SDK package for the connector `example`. It will also provide examples on how to use your generated SDK to call your Data Connect queries and mutations.
+# README del SDK Interno (Servicios de Firebase)
 
-**If you're looking for the `Angular README`, you can find it at [`dataconnect-generated/angular/README.md`](./angular/README.md)**
+Este README es creado con el fin de entender proceso de uso de los servicios de conexión a Firebase creados para este proyecto. También incluiré ejemplos sobre cómo usar estos servicios para realizar lecturas (Queries) y escrituras/eliminaciones (Mutaciones) en tu base de datos en tiempo real.
 
-***NOTE:** This README is generated alongside the generated SDK. If you make changes to this file, they will be overwritten when the SDK is regenerated.*
+## Tabla de Contenidos
+- [**Visión General**](#visión-general)
+- [**Accediendo a los Servicios**](#accediendo-a-los-servicios)
+- [**Consultas (Lecturas en Tiempo Real)**](#consultas-lecturas-en-tiempo-real)
+  - [*obtenerZapatillas*](#obtenerzapatillas)
+- [**Mutaciones (Escrituras y Eliminaciones)**](#mutaciones-escrituras-y-eliminaciones)
+  - [*agregarZapatilla*](#agregarzapatilla)
+  - [*eliminarZapatilla*](#eliminarzapatilla)
 
-# Table of Contents
-- [**Overview**](#generated-javascript-readme)
-- [**Accessing the connector**](#accessing-the-connector)
-  - [*Connecting to the local Emulator*](#connecting-to-the-local-emulator)
-- [**Queries**](#queries)
-  - [*ListMyEvents*](#listmyevents)
-- [**Mutations**](#mutations)
-  - [*CreateEvent*](#createevent)
-  - [*JoinEvent*](#joinevent)
-  - [*VoteOnPollOption*](#voteonpolloption)
+---
 
-# Accessing the connector
-A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `example`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
+## Accediendo a los Servicios
 
-You can use this generated SDK by importing from the package `@dataconnect/generated` as shown below. Both CommonJS and ESM imports are supported.
+En este proyecto, la lógica de base de datos está encapsulada en servicios dedicados (`ZapatillasService`, `VideojuegosService`, `CursosService`). Un servicio actúa como un puente directo entre tus componentes visuales y Firebase Realtime Database.
 
-You can also follow the instructions from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#set-client).
+Puedes usar estos servicios inyectándolos en el constructor de tus componentes de Angular.
 
 ```typescript
-import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig } from '@dataconnect/generated';
+import { Component, OnInit } from '@angular/core';
+import { ZapatillasService } from '../../services/zapatillas.service';
 
-const dataConnect = getDataConnect(connectorConfig);
-```
-
-## Connecting to the local Emulator
-By default, the connector will connect to the production service.
-
-To connect to the emulator, you can use the following code.
-You can also follow the emulator instructions from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#instrument-clients).
-
-```typescript
-import { connectDataConnectEmulator, getDataConnect } from 'firebase/data-connect';
-import { connectorConfig } from '@dataconnect/generated';
-
-const dataConnect = getDataConnect(connectorConfig);
-connectDataConnectEmulator(dataConnect, 'localhost', 9399);
-```
-
-After it's initialized, you can call your Data Connect [queries](#queries) and [mutations](#mutations) from your generated SDK.
-
-# Queries
-
-There are two ways to execute a Data Connect Query using the generated Web SDK:
-- Using a Query Reference function, which returns a `QueryRef`
-  - The `QueryRef` can be used as an argument to `executeQuery()`, which will execute the Query and return a `QueryPromise`
-- Using an action shortcut function, which returns a `QueryPromise`
-  - Calling the action shortcut function will execute the Query and return a `QueryPromise`
-
-The following is true for both the action shortcut function and the `QueryRef` function:
-- The `QueryPromise` returned will resolve to the result of the Query once it has finished executing
-- If the Query accepts arguments, both the action shortcut function and the `QueryRef` function accept a single argument: an object that contains all the required variables (and the optional variables) for the Query
-- Both functions can be called with or without passing in a `DataConnect` instance as an argument. If no `DataConnect` argument is passed in, then the generated SDK will call `getDataConnect(connectorConfig)` behind the scenes for you.
-
-Below are examples of how to use the `example` connector's generated functions to execute each query. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#using-queries).
-
-## ListMyEvents
-You can execute the `ListMyEvents` query using the following action shortcut function, or by calling `executeQuery()` after calling the following `QueryRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
-```typescript
-listMyEvents(options?: ExecuteQueryOptions): QueryPromise<ListMyEventsData, undefined>;
-
-interface ListMyEventsRef {
-  ...
-  /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<ListMyEventsData, undefined>;
-}
-export const listMyEventsRef: ListMyEventsRef;
-```
-You can also pass in a `DataConnect` instance to the action shortcut function or `QueryRef` function.
-```typescript
-listMyEvents(dc: DataConnect, options?: ExecuteQueryOptions): QueryPromise<ListMyEventsData, undefined>;
-
-interface ListMyEventsRef {
-  ...
-  (dc: DataConnect): QueryRef<ListMyEventsData, undefined>;
-}
-export const listMyEventsRef: ListMyEventsRef;
-```
-
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the listMyEventsRef:
-```typescript
-const name = listMyEventsRef.operationName;
-console.log(name);
-```
-
-### Variables
-The `ListMyEvents` query has no variables.
-### Return Type
-Recall that executing the `ListMyEvents` query returns a `QueryPromise` that resolves to an object with a `data` property.
-
-The `data` property is an object of type `ListMyEventsData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-```typescript
-export interface ListMyEventsData {
-  events: ({
-    id: UUIDString;
-    title: string;
-    eventDate: TimestampString;
-    description?: string | null;
-    location?: string | null;
-  } & Event_Key)[];
+@Component({
+  selector: 'app-mi-componente',
+  standalone: true
+})
+export class MiComponente {
+  // Inyección de dependencias clásica de Angular
+  constructor(private zapatillasService: ZapatillasService) {}
 }
 ```
-### Using `ListMyEvents`'s action shortcut function
+
+---
+
+## Consultas (Lecturas en Tiempo Real)
+
+Hay una forma principal de ejecutar una consulta (Query) en nuestro proyecto:
+- Suscribiéndote al `Observable` que retorna el servicio. Este conducto se mantiene abierto, lo que significa que cualquier cambio en la nube actualizará tu interfaz automáticamente.
+
+A continuación, se muestran ejemplos de cómo usar el servicio generado para ejecutar consultas. 
+
+### obtenerZapatillas
+
+Puedes conectarte al flujo de zapatillas usando la función `obtenerZapatillas()`. Esta función no requiere variables y retorna un `Observable` de un arreglo de tipo `Zapatilla[]`.
+
+#### Tipo de Retorno
+Recordemos que ejecutar `obtenerZapatillas` devuelve un flujo continuo (Observable) de datos con la siguiente interfaz:
 
 ```typescript
-import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, listMyEvents } from '@dataconnect/generated';
-
-
-// Call the `listMyEvents()` function to execute the query.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await listMyEvents();
-
-// You can also pass in a `DataConnect` instance to the action shortcut function.
-const dataConnect = getDataConnect(connectorConfig);
-const { data } = await listMyEvents(dataConnect);
-
-console.log(data.events);
-
-// Or, you can use the `Promise` API.
-listMyEvents().then((response) => {
-  const data = response.data;
-  console.log(data.events);
-});
-```
-
-### Using `ListMyEvents`'s `QueryRef` function
-
-```typescript
-import { getDataConnect, executeQuery } from 'firebase/data-connect';
-import { connectorConfig, listMyEventsRef } from '@dataconnect/generated';
-
-
-// Call the `listMyEventsRef()` function to get a reference to the query.
-const ref = listMyEventsRef();
-
-// You can also pass in a `DataConnect` instance to the `QueryRef` function.
-const dataConnect = getDataConnect(connectorConfig);
-const ref = listMyEventsRef(dataConnect);
-
-// Call `executeQuery()` on the reference to execute the query.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await executeQuery(ref);
-
-console.log(data.events);
-
-// Or, you can use the `Promise` API.
-executeQuery(ref).then((response) => {
-  const data = response.data;
-  console.log(data.events);
-});
-```
-
-# Mutations
-
-There are two ways to execute a Data Connect Mutation using the generated Web SDK:
-- Using a Mutation Reference function, which returns a `MutationRef`
-  - The `MutationRef` can be used as an argument to `executeMutation()`, which will execute the Mutation and return a `MutationPromise`
-- Using an action shortcut function, which returns a `MutationPromise`
-  - Calling the action shortcut function will execute the Mutation and return a `MutationPromise`
-
-The following is true for both the action shortcut function and the `MutationRef` function:
-- The `MutationPromise` returned will resolve to the result of the Mutation once it has finished executing
-- If the Mutation accepts arguments, both the action shortcut function and the `MutationRef` function accept a single argument: an object that contains all the required variables (and the optional variables) for the Mutation
-- Both functions can be called with or without passing in a `DataConnect` instance as an argument. If no `DataConnect` argument is passed in, then the generated SDK will call `getDataConnect(connectorConfig)` behind the scenes for you.
-
-Below are examples of how to use the `example` connector's generated functions to execute each mutation. You can also follow the examples from the [Data Connect documentation](https://firebase.google.com/docs/data-connect/web-sdk#using-mutations).
-
-## CreateEvent
-You can execute the `CreateEvent` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
-```typescript
-createEvent(vars: CreateEventVariables): MutationPromise<CreateEventData, CreateEventVariables>;
-
-interface CreateEventRef {
-  ...
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: CreateEventVariables): MutationRef<CreateEventData, CreateEventVariables>;
-}
-export const createEventRef: CreateEventRef;
-```
-You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```typescript
-createEvent(dc: DataConnect, vars: CreateEventVariables): MutationPromise<CreateEventData, CreateEventVariables>;
-
-interface CreateEventRef {
-  ...
-  (dc: DataConnect, vars: CreateEventVariables): MutationRef<CreateEventData, CreateEventVariables>;
-}
-export const createEventRef: CreateEventRef;
-```
-
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the createEventRef:
-```typescript
-const name = createEventRef.operationName;
-console.log(name);
-```
-
-### Variables
-The `CreateEvent` mutation requires an argument of type `CreateEventVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-
-```typescript
-export interface CreateEventVariables {
-  title: string;
-  eventDate: TimestampString;
-  description?: string | null;
-  location?: string | null;
+export class Zapatilla {
+  id?: string;
+  nombre: string;
+  marca: string;
+  precio: number;
+  color: string;
+  stock: boolean;
 }
 ```
-### Return Type
-Recall that executing the `CreateEvent` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `CreateEventData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+#### Ejemplo de uso en el Controlador (TypeScript)
+
+La mejor práctica en Angular es no usar `.subscribe()` manualmente, sino pasar el Observable a la vista HTML para evitar fugas de memoria.
+
 ```typescript
-export interface CreateEventData {
-  event_insert: Event_Key;
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Zapatilla } from '../../models/zapatilla';
+import { ZapatillasService } from '../../services/zapatillas.service';
+
+export class ZapatillasComponent implements OnInit {
+  public zapatillas$: Observable<Zapatilla[]>;
+
+  constructor(private zapatillasService: ZapatillasService) {}
+
+  ngOnInit() {
+    // Abrimos el túnel de datos
+    this.zapatillas$ = this.zapatillasService.obtenerZapatillas();
+  }
 }
 ```
-### Using `CreateEvent`'s action shortcut function
 
-```typescript
-import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, createEvent, CreateEventVariables } from '@dataconnect/generated';
+#### Ejemplo de uso en la Vista (HTML)
+Usando el `async` pipe de Angular.
 
-// The `CreateEvent` mutation requires an argument of type `CreateEventVariables`:
-const createEventVars: CreateEventVariables = {
-  title: ..., 
-  eventDate: ..., 
-  description: ..., // optional
-  location: ..., // optional
-};
-
-// Call the `createEvent()` function to execute the mutation.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await createEvent(createEventVars);
-// Variables can be defined inline as well.
-const { data } = await createEvent({ title: ..., eventDate: ..., description: ..., location: ..., });
-
-// You can also pass in a `DataConnect` instance to the action shortcut function.
-const dataConnect = getDataConnect(connectorConfig);
-const { data } = await createEvent(dataConnect, createEventVars);
-
-console.log(data.event_insert);
-
-// Or, you can use the `Promise` API.
-createEvent(createEventVars).then((response) => {
-  const data = response.data;
-  console.log(data.event_insert);
-});
-```
-
-### Using `CreateEvent`'s `MutationRef` function
-
-```typescript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, createEventRef, CreateEventVariables } from '@dataconnect/generated';
-
-// The `CreateEvent` mutation requires an argument of type `CreateEventVariables`:
-const createEventVars: CreateEventVariables = {
-  title: ..., 
-  eventDate: ..., 
-  description: ..., // optional
-  location: ..., // optional
-};
-
-// Call the `createEventRef()` function to get a reference to the mutation.
-const ref = createEventRef(createEventVars);
-// Variables can be defined inline as well.
-const ref = createEventRef({ title: ..., eventDate: ..., description: ..., location: ..., });
-
-// You can also pass in a `DataConnect` instance to the `MutationRef` function.
-const dataConnect = getDataConnect(connectorConfig);
-const ref = createEventRef(dataConnect, createEventVars);
-
-// Call `executeMutation()` on the reference to execute the mutation.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await executeMutation(ref);
-
-console.log(data.event_insert);
-
-// Or, you can use the `Promise` API.
-executeMutation(ref).then((response) => {
-  const data = response.data;
-  console.log(data.event_insert);
-});
-```
-
-## JoinEvent
-You can execute the `JoinEvent` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
-```typescript
-joinEvent(vars: JoinEventVariables): MutationPromise<JoinEventData, JoinEventVariables>;
-
-interface JoinEventRef {
-  ...
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: JoinEventVariables): MutationRef<JoinEventData, JoinEventVariables>;
-}
-export const joinEventRef: JoinEventRef;
-```
-You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```typescript
-joinEvent(dc: DataConnect, vars: JoinEventVariables): MutationPromise<JoinEventData, JoinEventVariables>;
-
-interface JoinEventRef {
-  ...
-  (dc: DataConnect, vars: JoinEventVariables): MutationRef<JoinEventData, JoinEventVariables>;
-}
-export const joinEventRef: JoinEventRef;
-```
-
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the joinEventRef:
-```typescript
-const name = joinEventRef.operationName;
-console.log(name);
-```
-
-### Variables
-The `JoinEvent` mutation requires an argument of type `JoinEventVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-
-```typescript
-export interface JoinEventVariables {
-  eventId: UUIDString;
+```html
+@if (zapatillas$ | async; as zapatillas) {
+  <ul>
+    @for (zapatilla of zapatillas; track $index) {
+      <li>{{ zapatilla.nombre }} - ${{ zapatilla.precio }}</li>
+    }
+  </ul>
 }
 ```
-### Return Type
-Recall that executing the `JoinEvent` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
 
-The `data` property is an object of type `JoinEventData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+---
+
+## Mutaciones (Escrituras y Eliminaciones)
+
+Las mutaciones cambian el estado de la base de datos. En nuestro proyecto, esto se logra enviando el objeto completo al servicio para que este lo suba a Firebase mediante la función `push` o lo borre mediante la función `remove`.
+
+### agregarZapatilla
+
+Para insertar un nuevo dato, llamas al método `agregarZapatilla()` pasándole la variable requerida.
+
+#### Variables Requeridas
+La mutación requiere un argumento de la clase `Zapatilla` sin ID (Firebase le asignará un ID alfanumérico único automáticamente).
+
+#### Ejemplo de uso
+
 ```typescript
-export interface JoinEventData {
-  participant_insert: Participant_Key;
+import { Component } from '@angular/core';
+import { Zapatilla } from '../../models/zapatilla';
+import { ZapatillasService } from '../../services/zapatillas.service';
+
+export class ZapatillasComponent {
+  constructor(private zapatillasService: ZapatillasService) {}
+
+  guardarNuevaZapatilla() {
+    // 1. Preparamos el objeto
+    const nuevaZapa = new Zapatilla(
+      'Air Max', // nombre
+      'Nike',    // marca
+      120,       // precio
+      'Rojo',    // color
+      true       // stock
+    );
+
+    // 2. Ejecutamos la mutación
+    this.zapatillasService.agregarZapatilla(nuevaZapa);
+    console.log("¡Zapatilla guardada con éxito en la nube!");
+  }
 }
 ```
-### Using `JoinEvent`'s action shortcut function
+
+### eliminarZapatilla
+
+Para borrar un dato existente, pasas explícitamente el `id` único del objeto a la función `eliminarZapatilla()`.
+
+#### Variables Requeridas
+La mutación requiere un string correspondiente al `id` del registro en Firebase.
+
+#### Ejemplo de uso
 
 ```typescript
-import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, joinEvent, JoinEventVariables } from '@dataconnect/generated';
-
-// The `JoinEvent` mutation requires an argument of type `JoinEventVariables`:
-const joinEventVars: JoinEventVariables = {
-  eventId: ..., 
-};
-
-// Call the `joinEvent()` function to execute the mutation.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await joinEvent(joinEventVars);
-// Variables can be defined inline as well.
-const { data } = await joinEvent({ eventId: ..., });
-
-// You can also pass in a `DataConnect` instance to the action shortcut function.
-const dataConnect = getDataConnect(connectorConfig);
-const { data } = await joinEvent(dataConnect, joinEventVars);
-
-console.log(data.participant_insert);
-
-// Or, you can use the `Promise` API.
-joinEvent(joinEventVars).then((response) => {
-  const data = response.data;
-  console.log(data.participant_insert);
-});
+  borrarZapatilla(zapatilla: Zapatilla) {
+    // Verificamos que el ID exista antes de intentar borrar
+    if (zapatilla.id) {
+      this.zapatillasService.eliminarZapatilla(zapatilla.id);
+      console.log("Registro eliminado correctamente");
+    }
+  }
 ```
 
-### Using `JoinEvent`'s `MutationRef` function
-
-```typescript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, joinEventRef, JoinEventVariables } from '@dataconnect/generated';
-
-// The `JoinEvent` mutation requires an argument of type `JoinEventVariables`:
-const joinEventVars: JoinEventVariables = {
-  eventId: ..., 
-};
-
-// Call the `joinEventRef()` function to get a reference to the mutation.
-const ref = joinEventRef(joinEventVars);
-// Variables can be defined inline as well.
-const ref = joinEventRef({ eventId: ..., });
-
-// You can also pass in a `DataConnect` instance to the `MutationRef` function.
-const dataConnect = getDataConnect(connectorConfig);
-const ref = joinEventRef(dataConnect, joinEventVars);
-
-// Call `executeMutation()` on the reference to execute the mutation.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await executeMutation(ref);
-
-console.log(data.participant_insert);
-
-// Or, you can use the `Promise` API.
-executeMutation(ref).then((response) => {
-  const data = response.data;
-  console.log(data.participant_insert);
-});
-```
-
-## VoteOnPollOption
-You can execute the `VoteOnPollOption` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
-```typescript
-voteOnPollOption(vars: VoteOnPollOptionVariables): MutationPromise<VoteOnPollOptionData, VoteOnPollOptionVariables>;
-
-interface VoteOnPollOptionRef {
-  ...
-  /* Allow users to create refs without passing in DataConnect */
-  (vars: VoteOnPollOptionVariables): MutationRef<VoteOnPollOptionData, VoteOnPollOptionVariables>;
-}
-export const voteOnPollOptionRef: VoteOnPollOptionRef;
-```
-You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
-```typescript
-voteOnPollOption(dc: DataConnect, vars: VoteOnPollOptionVariables): MutationPromise<VoteOnPollOptionData, VoteOnPollOptionVariables>;
-
-interface VoteOnPollOptionRef {
-  ...
-  (dc: DataConnect, vars: VoteOnPollOptionVariables): MutationRef<VoteOnPollOptionData, VoteOnPollOptionVariables>;
-}
-export const voteOnPollOptionRef: VoteOnPollOptionRef;
-```
-
-If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the voteOnPollOptionRef:
-```typescript
-const name = voteOnPollOptionRef.operationName;
-console.log(name);
-```
-
-### Variables
-The `VoteOnPollOption` mutation requires an argument of type `VoteOnPollOptionVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-
-```typescript
-export interface VoteOnPollOptionVariables {
-  pollOptionId: UUIDString;
-}
-```
-### Return Type
-Recall that executing the `VoteOnPollOption` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
-
-The `data` property is an object of type `VoteOnPollOptionData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
-```typescript
-export interface VoteOnPollOptionData {
-  vote_insert: Vote_Key;
-}
-```
-### Using `VoteOnPollOption`'s action shortcut function
-
-```typescript
-import { getDataConnect } from 'firebase/data-connect';
-import { connectorConfig, voteOnPollOption, VoteOnPollOptionVariables } from '@dataconnect/generated';
-
-// The `VoteOnPollOption` mutation requires an argument of type `VoteOnPollOptionVariables`:
-const voteOnPollOptionVars: VoteOnPollOptionVariables = {
-  pollOptionId: ..., 
-};
-
-// Call the `voteOnPollOption()` function to execute the mutation.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await voteOnPollOption(voteOnPollOptionVars);
-// Variables can be defined inline as well.
-const { data } = await voteOnPollOption({ pollOptionId: ..., });
-
-// You can also pass in a `DataConnect` instance to the action shortcut function.
-const dataConnect = getDataConnect(connectorConfig);
-const { data } = await voteOnPollOption(dataConnect, voteOnPollOptionVars);
-
-console.log(data.vote_insert);
-
-// Or, you can use the `Promise` API.
-voteOnPollOption(voteOnPollOptionVars).then((response) => {
-  const data = response.data;
-  console.log(data.vote_insert);
-});
-```
-
-### Using `VoteOnPollOption`'s `MutationRef` function
-
-```typescript
-import { getDataConnect, executeMutation } from 'firebase/data-connect';
-import { connectorConfig, voteOnPollOptionRef, VoteOnPollOptionVariables } from '@dataconnect/generated';
-
-// The `VoteOnPollOption` mutation requires an argument of type `VoteOnPollOptionVariables`:
-const voteOnPollOptionVars: VoteOnPollOptionVariables = {
-  pollOptionId: ..., 
-};
-
-// Call the `voteOnPollOptionRef()` function to get a reference to the mutation.
-const ref = voteOnPollOptionRef(voteOnPollOptionVars);
-// Variables can be defined inline as well.
-const ref = voteOnPollOptionRef({ pollOptionId: ..., });
-
-// You can also pass in a `DataConnect` instance to the `MutationRef` function.
-const dataConnect = getDataConnect(connectorConfig);
-const ref = voteOnPollOptionRef(dataConnect, voteOnPollOptionVars);
-
-// Call `executeMutation()` on the reference to execute the mutation.
-// You can use the `await` keyword to wait for the promise to resolve.
-const { data } = await executeMutation(ref);
-
-console.log(data.vote_insert);
-
-// Or, you can use the `Promise` API.
-executeMutation(ref).then((response) => {
-  const data = response.data;
-  console.log(data.vote_insert);
-});
-```
-
+*(Nota: Este mismo patrón de Consultas y Mutaciones aplica exactamente igual para `VideojuegosService` y `CursosService`).*

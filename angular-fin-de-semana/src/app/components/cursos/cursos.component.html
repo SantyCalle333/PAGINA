@@ -1,0 +1,35 @@
+<!-- Yo soy la vista de Cursos -->
+<div class="cursos-container">
+  
+  <!-- Yo presento el título principal -->
+  <h2 class="cursos-titulo">{{ titulo }}</h2>
+
+  <!-- Yo me suscribo a los datos en vivo. Esto es Código Limpio: delegar las suscripciones al HTML -->
+  @if (cursos$ | async; as cursos) {
+    <ul class="cursos-lista">
+      @for (curso of cursos; track $index) {
+        <li class="curso-item">
+          <div class="curso-contenido">
+            <span><strong>{{ curso.nombre }}</strong></span>
+            
+            <!-- Yo provoco el borrado enviando los datos del curso seleccionado -->
+            <button class="btn-eliminar" (click)="eliminarCurso(curso)">Eliminar</button>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+
+  <!-- Formulario de ingreso de datos bidireccional -->
+  <div class="formulario-container">
+    <div class="formulario-grupo">
+      <input 
+        type="text" 
+        [(ngModel)]="nuevoCurso" 
+        class="input-texto"
+      />
+      <!-- Yo envío el nuevo curso a la nube -->
+      <button class="btn-agregar" (click)="agregarCurso()">Agregar Curso</button>
+    </div>
+  </div>
+</div>

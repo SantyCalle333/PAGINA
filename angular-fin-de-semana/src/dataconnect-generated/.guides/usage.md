@@ -1,84 +1,96 @@
-# Basic Usage
+# Guía de Uso (Usage)
 
-Always prioritize using a supported framework over using the generated SDK
-directly. Supported frameworks simplify the developer experience and help ensure
-best practices are followed.
+Esta guía explica cómo utilizar los servicios de Firebase (`ZapatillasService`, `VideojuegosService`, `CursosService`) dentro de los componentes de Angular en tu proyecto.
 
+## 1. Inyectar el Servicio
 
-### Angular
+Dado que el proyecto utiliza componentes *Standalone* y Angular moderno (v14+), inyectamos el servicio deseado directamente en el constructor del componente donde lo vamos a usar.
 
-The generated SDK creates injectable wrapper functions.
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 
-Here's an example:
-```
-import { injectCreateEvent, injectJoinEvent, injectListMyEvents, injectVoteOnPollOption } from '@dataconnect/generated/angular';
+// 1. Importar el modelo y el servicio
+import { CursosService } from '../../services/cursos.service';
+import { Curso } from '../../models/curso';
 
 @Component({
-  selector: 'my-component',
-  ...
+  selector: 'app-cursos',
+  standalone: true,
+  templateUrl: './cursos.component.html'
 })
-class MyComponent {
-  // The types of these injectors are available in angular/index.d.ts
-  private readonly CreateEventOperation = injectCreateEvent(createEventVars);
-  private readonly JoinEventOperation = injectJoinEvent(joinEventVars);
-  private readonly ListMyEventsOperation = injectListMyEvents();
-  private readonly VoteOnPollOptionOperation = injectVoteOnPollOption(voteOnPollOptionVars);
-  }
-```
+export class Cursos implements OnInit {
+  
+  // 2. Preparar la variable reactiva (Observable)
+  public cursos$: Observable<Curso[]> = new Observable();
 
-Each operation is a wrapper function around Tanstack Query Angular.
-
-Here's an example:
-```ts
-@Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'simple-example',
-  template: `
-    @if (movies.isPending()) {
-      Loading...
-    }
-    @if (movies.error()) {
-      An error has occurred: {{ movies.error().message }}
-    }
-    @if (movies.data(); as data) {
-      @for (movie of data.movies ; track
-        movie.id) {
-      <h1>{{ movie.title }}</h1>
-      <p>{{ movie.synopsis }}</p>
-      }
-    }
-  `
-})
-export class SimpleExampleComponent {
-  http = inject(HttpClient)
-
-  movies = injectListMovies();
+  // 3. Inyectar el servicio en el constructor
+  constructor(private cursosService: CursosService) {}
 }
 ```
 
+## 2. Lectura en Tiempo Real (Queries)
 
+Para leer datos, no hacemos llamadas a una API tradicional (como `fetch` o `HttpClient`), sino que abrimos un "túnel" de datos en vivo usando Observables.
 
+### En el Controlador (`.ts`)
 
-## Advanced Usage
-If a user is not using a supported framework, they can use the generated SDK directly.
+Conectamos la variable al flujo de datos en el ciclo de vida `ngOnInit`:
 
-Here's an example of how to use it with the first 5 operations:
-
-```js
-import { createEvent, joinEvent, listMyEvents, voteOnPollOption } from '@dataconnect/generated';
-
-
-// Operation CreateEvent:  For variables, look at type CreateEventVars in ../index.d.ts
-const { data } = await CreateEvent(dataConnect, createEventVars);
-
-// Operation JoinEvent:  For variables, look at type JoinEventVars in ../index.d.ts
-const { data } = await JoinEvent(dataConnect, joinEventVars);
-
-// Operation ListMyEvents: 
-const { data } = await ListMyEvents(dataConnect);
-
-// Operation VoteOnPollOption:  For variables, look at type VoteOnPollOptionVars in ../index.d.ts
-const { data } = await VoteOnPollOption(dataConnect, voteOnPollOptionVars);
-
-
+```typescript
+  ngOnInit() {
+    this.cursos$ = this.cursosService.obtenerCursos();
+  }
 ```
+
+### En la Vista (`.html`)
+
+Para mostrar los datos sin riesgo de fugas de memoria, utilizamos el conducto asíncrono (`async pipe`) integrado con la directiva `@if` de Angular 17+:
+
+```html
+<!-- Nos suscribimos al flujo de datos y lo nombramos "cursos" -->
+@if (cursos$ | async; as cursos) {
+  <ul>
+    <!-- Iteramos sobre la lista en vivo -->
+    @for (curso of cursos; track $index) {
+      <li>{{ curso.nombre }}</li>
+    }
+  </ul>
+}
+```
+
+## 3. Escritura y Eliminación (Mutations)
+
+Las modificaciones a la base de datos se manejan instanciando un modelo y pasándoselo al servicio. 
+
+### Agregar (Create)
+
+Creamos una instancia del modelo y se la pasamos al método `agregar...()` correspondiente. Firebase le asignará un ID automáticamente.
+
+```typescript
+  agregarCurso(nombre: string) {
+    if (nombre.trim()) {
+      // Usamos la clase modelo (que no requiere ID en su constructor)
+      const nuevoObj = new Curso(nombre);
+      this.cursosService.agregarCurso(nuevoObj);
+    }
+  }
+```
+
+### Eliminar (Delete)
+
+Para eliminar un registro, debemos conocer su ID único en la nube. El objeto recuperado mediante la lectura ya lo incluye de forma predeterminada.
+
+```typescript
+  eliminarCurso(curso: Curso) {
+    if (curso.id) {
+      this.cursosService.eliminarCurso(curso.id);
+    }
+  }
+```
+
+## Resumen de Buenas Prácticas
+
+1. **Código Limpio:** Nunca usar `.subscribe()` en el controlador TypeScript si solo vas a pintar datos en pantalla. Usa siempre el `async pipe` en el HTML.
+2. **Encapsulamiento:** Nunca inyectar `Database` de Firebase directamente en los componentes visuales. Todo debe pasar por los servicios (`CursosService`, etc.).
+3. **Clases Modelo:** Tipar estrictamente los datos usando las clases de `src/app/models/` antes de enviarlos a Firebase.

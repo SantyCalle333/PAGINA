@@ -3,12 +3,11 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
-    "types": []
+    "types": ["jasmine"]
   },
   "include": [
+    "src/**/*.spec.ts",
+    "src/**/*.d.ts",
     "src/**/*.ts"
-  ],
-  "exclude": [
-    "src/**/*.spec.ts"
   ]
 }

@@ -4,6 +4,11 @@ import { setLogLevel, LogLevel } from '@angular/fire';
 import { Zapatilla } from '../models/zapatilla';
 import { Observable } from 'rxjs';
 
+/**
+ * Yo soy el servicio de Zapatillas.
+ * Me encargo de manejar toda la comunicación con la base de datos de Firebase.
+ * Al aislar esto aquí, mantengo los componentes limpios y enfocados solo en la vista.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -13,30 +18,38 @@ export class ZapatillasService {
   private zapatillas$: Observable<Zapatilla[]>;
 
   constructor() {
-    // Silenciamos las advertencias seguras de AngularFire
+    // Yo silencio los logs de Firebase para mantener la consola limpia.
     setLogLevel(LogLevel.SILENT);
     
-    // Definir la conexión en el constructor garantiza el "Injection Context" de Angular
+    // Yo creo una referencia a la colección 'zapatillas' y configuro un túnel continuo (Observable).
     const dbRef = ref(this.db, 'zapatillas');
     this.zapatillas$ = listVal<Zapatilla>(dbRef, { keyField: 'id' });
   }
 
-  // Obtener todas las zapatillas (Túnel WebSocket en vivo)
+  /**
+   * Yo entrego el túnel de datos (Observable) a quien me lo pida.
+   * Cualquier cambio en Firebase se reflejará instantáneamente a través de este canal.
+   */
   obtenerZapatillas(): Observable<Zapatilla[]> {
     return this.zapatillas$;
   }
 
-  // Guardar una nueva zapatilla
+  /**
+   * Yo recibo un objeto Zapatilla, le quito el ID (porque Firebase lo autogenera)
+   * y lo empujo a la base de datos en la nube.
+   */
   agregarZapatilla(zapatilla: Zapatilla) {
     return runInInjectionContext(this.injector, () => {
       const dbRef = ref(this.db, 'zapatillas');
       const zapa = JSON.parse(JSON.stringify(zapatilla));
-      delete zapa.id; // Firebase no permite propiedades 'undefined'
+      delete zapa.id;
       return push(dbRef, zapa);
     });
   }
 
-  // Eliminar una zapatilla
+  /**
+   * Yo recibo un ID específico y lo borro de la base de datos permanentemente.
+   */
   eliminarZapatilla(id: string) {
     return runInInjectionContext(this.injector, () => {
       const dbRef = ref(this.db, `zapatillas/${id}`);

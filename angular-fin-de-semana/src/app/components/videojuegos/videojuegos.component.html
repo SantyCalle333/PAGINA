@@ -1,40 +1,45 @@
-<hr style="border-color: var(--border); margin-bottom: 1rem;"/>
-
-<div class="Videojuegos">
-
-  <h2>{{ titulo }}</h2>
-
-  <div style="margin-bottom: 1rem; display: flex; gap: 0.5rem; justify-content: center;">
-    <input type="text" [(ngModel)]="nuevotitulo" placeholder="Escribe un nuevo título..." />
-    <button (click)="cambiarTitulo()">Cambiar titulo</button>
-  </div>
-
-  <p style="color: var(--text-muted);">{{ listado }}:</p>
-
-  <!-- 
-    [DOC] Async Pipe y Aliasing
-    ¿Qué hace? '@if (videojuegos$ | async; as videojuegos)'
-    Se suscribe a Firebase UNA sola vez por pantalla y guarda el resultado en la variable 'videojuegos'.
-    ¿Por qué? Si usáramos varios '| async', crearíamos un bucle infinito ("Maximum call stack size") en Firebase.
-    Además, el AsyncPipe destruye la conexión automáticamente al cambiar de página.
-  -->
-  @if (videojuegos$ | async; as videojuegos) {
-    @if (videojuegos.length === 0) {
-      <p style="color: #999; font-style: italic;">No hay videojuegos agregados aún</p>
-    } @else {
-      <ul style="margin-bottom: 1.5rem;">
-        @for (juego of videojuegos; track $index) {
-          <li style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
-            <span>{{ juego.nombre }}</span>
-            <button (click)="eliminarJuego(juego)" style="background: #ef4444; padding: 0.2rem 0.5rem; font-size: 0.8rem;">Eliminar</button>
-          </li>
-        }
-      </ul>
-    }
-  }
+<!-- Yo soy la vista de Videojuegos -->
+<div class="videojuegos-container">
   
-  <div style="margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: center;">
-    <input type="text" [(ngModel)]="nuevoJuego" placeholder="Ingrese nuevo videojuego" />   
-    <button (click)="agregarJuego()">Agregar Videojuego</button>
+  <!-- Yo titulo la sección. Puedes cambiar mi nombre abajo -->
+  <h2 class="videojuegos-titulo">{{ titulo }}</h2>
+
+  <!-- Yo leo los datos asíncronos en tiempo real usando el 'Async Pipe' -->
+  @if (videojuegos$ | async; as videojuegos) {
+    <ul class="videojuegos-lista">
+      <!-- Itero los juegos usando la directiva de flujo de control optimizada de Angular -->
+      @for (juego of videojuegos; track $index) {
+        <li class="videojuego-item">
+          <div class="videojuego-contenido">
+            <span><strong>{{ juego.nombre }}</strong></span>
+            <!-- Yo soy el botón que dispara la función de borrado de este juego en específico -->
+            <button class="btn-eliminar" (click)="eliminarJuego(juego)">Eliminar</button>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+
+  <!-- Yo manejo las interacciones de entrada del usuario usando Template-Driven Forms (ngModel) -->
+  <div class="formularios-container">
+    
+    <div class="formulario-grupo">
+      <input 
+        type="text" 
+        [(ngModel)]="nuevoJuego" 
+        class="input-texto"
+      />
+      <button class="btn-accion btn-verde" (click)="agregarJuego()">Agregar Juego</button>
+    </div>
+
+    <div class="formulario-grupo">
+      <input 
+        type="text" 
+        [(ngModel)]="nuevotitulo" 
+        class="input-texto"
+      />
+      <button class="btn-accion btn-azul" (click)="cambiarTitulo()">Renombrar Componente</button>
+    </div>
+
   </div>
 </div>

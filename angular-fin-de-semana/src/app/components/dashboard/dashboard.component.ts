@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VideojuegosComponent } from '../videojuegos/videojuegos.component';  
 import { ZapatillasComponent } from '../zapatillas/zapatillas.component';
-import { Cursos } from "../../cursos/cursos.component";
+import { Cursos } from "../cursos/cursos.component";
 import { Configuracion } from '../../models/configuracion';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';

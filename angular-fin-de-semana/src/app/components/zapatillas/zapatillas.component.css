@@ -1,0 +1,169 @@
+/* =========================================
+   Yo soy el archivo de estilos de Zapatillas.
+   Aquí centralizo todos los estilos que saqué del HTML.
+   ========================================= */
+
+.zapatillas-container {
+  padding: 1rem;
+}
+
+.zapatillas-titulo {
+  color: var(--accent);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* Lista de marcas superiores */
+.marcas-lista {
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.marca-item {
+  background: rgba(255,255,255,0.05);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+/* Mensajes condicionales */
+.zapatillas-vacias {
+  color: #999;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Lista del catálogo principal */
+.catalogo-lista {
+  margin-bottom: 1.5rem;
+  text-align: left;
+  display: inline-block;
+  width: 100%;
+}
+
+.catalogo-item {
+  margin-bottom: 0.8rem;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-card);
+}
+
+.catalogo-contenido {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.precio-texto {
+  color: var(--accent);
+  margin-left: 0.5rem;
+}
+
+.oferta-etiqueta {
+  background: #10b981;
+  color: white;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+}
+
+/* Botones específicos de Zapatillas */
+.btn-eliminar {
+  background: #ef4444;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-eliminar:hover {
+  opacity: 0.8;
+}
+
+.btn-agregar {
+  background: var(--primary);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.btn-agregar:hover {
+  opacity: 0.9;
+}
+
+/* Formulario */
+.formulario-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.input-grupo {
+  position: relative;
+  width: 100%;
+}
+
+.input-etiqueta {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+  text-align: left;
+}
+
+.input-zapatilla {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Lista flotante de sugerencias (Autocompletar) */
+.sugerencias-lista {
+  position: absolute; 
+  top: 100%; 
+  left: 0; 
+  width: 100%; 
+  background: var(--bg-secondary); 
+  border: 1px solid var(--border); 
+  padding: 0; 
+  margin: 0; 
+  border-radius: 4px; 
+  z-index: 10;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.sugerencia-item {
+  padding: 0.5rem;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  text-align: left;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sugerencia-item:hover, .sugerencia-item:focus {
+  background: var(--primary);
+  color: white;
+  outline: none;
+}
+
+.botones-container {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
